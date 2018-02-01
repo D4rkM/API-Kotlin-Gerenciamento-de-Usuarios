@@ -1,27 +1,32 @@
 <?php
 
-  $conn = mysqli_connect('localhost', 'root', 'bcd127', 'gerenciamento');
+  if($_SERVER['REQUEST_METHOD']=='POST'){
 
-  $user = $_GET["user"];
-  $senha = $_GET["senha"];
+    $conn = mysqli_connect('localhost', 'root', 'bcd127', 'gerenciamento');
 
-  $sql = "SELECT * FROM usuario WHERE usuario = '$user' AND senha = '$senha';";
+    $user = $_POST["usuario"];
+    $senha = $_POST["senha"];
 
-  $select = mysqli_query($conn, $sql);
+    $sql = "SELECT * FROM usuario WHERE usuario = '$user' AND senha = '$senha';";
 
-  if(mysqli_num_rows($select) > 0){
+    $select = mysqli_query($conn, $sql);
+
+    if(mysqli_num_rows($select) > 0){
+
+      echo json_encode(array(
+          "sucesso" => true ,
+          "mensagem"=> "Usuário Conectado"));
+    } else {
+
+      echo json_encode(array(
+          "sucesso" => false ,
+          "mensagem" => mysqli_error($conn)));
+    }
+  }else{
 
     echo json_encode(array(
-        "sucesso" => true ,
-        "mensagem"=> "Usuário Conectado"));
-  } else {
-
-    echo json_encode(array(
-        "sucesso" => false ,
-        "mensagem" => mysqli_error($conn)));
+    "sucesso" => false ,
+    "mensagem"=> "Método não suportado"));
   }
-
-
-
 
  ?>
